@@ -1,0 +1,398 @@
+{
+  "user_management": {
+    "title": "User Management",
+    "description": "This section details the APIs for user registration, login, and retrieving user information.",
+    "endpoints": [
+      {
+        "path": "/user/register",
+        "method": "POST",
+        "summary": "Registers a new user with the provided details.",
+        "request_body": {
+          "username": "string",
+          "password": "string",
+          "email": "string",
+          "id_card": "string",
+          "age": "integer",
+          "phone": "string"
+        },
+        "returns": {
+          "id": "integer"
+        },
+        "return_description": "The unique ID of the newly registered user."
+      },
+      {
+        "path": "/user/login",
+        "method": "POST",
+        "summary": "Authenticates a user and returns their user ID upon successful login.",
+        "request_body": {
+          "id_card": "string",
+          "password": "string"
+        },
+        "returns": {
+          "user_id": "integer"
+        },
+        "return_description": "The unique ID of the logged-in user."
+      },
+      {
+        "path": "/user/info",
+        "method": "GET",
+        "summary": "Retrieves specific information about a user.",
+        "request_body": {
+          "user_id": "integer"
+        },
+        "returns": {
+          "user_info": {
+            "username": "string",
+            "email": "string",
+            "id_card": "string",
+            "age": "integer",
+            "phone": "string"
+          }
+        },
+        "return_description": "An object containing the requested user information. Fields will only be present if specified in the request."
+      }
+    ]
+  },
+  "insurance_information": {
+    "title": "Insurance Information",
+    "description": "This section provides APIs for retrieving insurance product details, including hotlists, filtered lists, and individual product details.",
+    "endpoints": [
+      {
+        "path": "/insurance/hotlist",
+        "method": "GET",
+        "summary": "Retrieves a list of popular or 'hot' insurance products.",
+        "returns": {
+          "hotlist": [
+            {
+              "insurance_id": "integer",
+              "insurance_name": "string",
+              "name": "string",
+              "type": "string",
+              "premium": "int",
+              "coverage_period": "int",
+              "description": "string",
+              "count": "int",
+              "price": "int",
+              "age_limit_min": "int",
+              "age_limit_max": "int"
+            }
+          ]
+        },
+        "return_description": "A list of insurance products, each with details such as ID, name, type, premium, coverage period, description, popularity count, and age limits."
+      },
+      {
+        "path": "/insurance/list",
+        "method": "GET",
+        "summary": "Retrieves a paginated and filterable list of insurance products.",
+        "parameters": {
+          "type": "string",
+          "name": "string",
+          "pagesize": "integer",
+          "startpage": "integer"
+        },
+        "parameter_description": {
+          "type": "Optional. Filters by insurance type.",
+          "name": "Optional. Filters by insurance product name.",
+          "pagesize": "Optional. Number of results per page.",
+          "startpage": "Optional. The starting page number."
+        },
+        "returns": {
+          "insurance_list": [
+            {
+              "insurance_id": "integer",
+              "insurance_name": "string",
+              "name": "string",
+              "type": "string",
+              "premium": "int",
+              "coverage_period": "int",
+              "description": "string",
+              "count": "int",
+              "price": "int",
+              "age_limit_min": "int",
+              "age_limit_max": "int"
+            }
+          ],
+          "total_count": "integer"
+        },
+        "return_description": "A list of insurance products matching the criteria, along with the total count of matching records. Each product includes details like ID, name, type, premium, coverage period, description, popularity count, and age limits."
+      },
+      {
+        "path": "/insurance/detail",
+        "method": "GET",
+        "summary": "Retrieves comprehensive details for a specific insurance product.",
+        "input": {
+          "insurance_id": "integer"
+        },
+        "input_description": "The unique ID of the insurance product.",
+        "returns": {
+          "insurance_id": "integer",
+          "insurance_name": "string",
+          "type": "string",
+          "premium": "int",
+          "coverage_period": "int",
+          "description": "string",
+          "count": "int",
+          "age_limit_min": "int",
+          "age_limit_max": "int",
+          "region": "string",
+          "price": "int",
+          "status": "string",
+          "people_distribution": {
+            "age_groups": [
+              {
+                "age_range": "string",
+                "count": "int"
+              }
+            ]
+          }
+        },
+        "return_description": "Detailed information about the insurance product, including its ID, name, type, premium, coverage period, description, popularity count, age limits, and demographic distribution of policyholders by age group and region."
+      }
+    ]
+  },
+  "insurance_application_management": {
+    "title": "Insurance Application Management",
+    "description": "This section covers APIs for submitting, checking the status of, and handling insurance applications.",
+    "endpoints": [
+      {
+        "path": "/insurance/application",
+        "method": "POST",
+        "summary": "Submits a new insurance application.",
+        "input": {
+          "insurancer_id": "integer",
+          "insurance_id": "integer",
+          "price": "integer",
+          "application_date": "string",
+          "insured_user_id_card": "string",
+          "insured_user_name": "string",
+          "insured_user_country": "string",
+          "insured_user_age": "integer",
+          "beneficiary_id_card": "string",
+          "beneficiary_name": "string",
+          "health_info": "string",
+          "start_date": "string",
+          "end_date": "string"
+        },
+        "input_description": {
+          "insurancer_id": "The ID of the insurance provider or agent.",
+          "insurance_id": "The ID of the insurance product being applied for.",
+          "application_date": "The date of the application in ISO 8601 format.",
+          "insured_user_id_card": "The ID card number of the insured person.",
+          "insured_user_name": "The name of the insured person.",
+          "insured_user_country": "The nationality of the insured person.",
+          "insured_user_age": "The age of the insured person.",
+          "beneficiary_id_card": "The ID card number of the beneficiary.",
+          "beneficiary_name": "The name of the beneficiary.",
+          "health_info": "Health information relevant to the application.",
+          "start_date": "The desired start date of the insurance coverage.",
+          "end_date": "The desired end date of the insurance coverage."
+        },
+        "returns": {
+          "application_id": "integer",
+          "status": "string"
+        },
+        "return_description": "The unique ID of the submitted application and its initial status (e.g., 'pending', 'approved', 'rejected')."
+      },
+      {
+        "path": "/insurance/application/status",
+        "method": "GET",
+        "summary": "Retrieves a list of insurance applications and their statuses for the current user.",
+        "returns": {
+          "application_status_list": [
+            {
+              "application_id": "integer",
+              "status": "string",
+              "insurance_id": "integer",
+              "insurance_name": "string",
+              "application_date": "string",
+              "insured_user_name": "string",
+              "insurancer_id": "integer",
+              "insurancer_name": "string"
+            }
+          ]
+        },
+        "return_description": "A list of insurance applications, each including details such as application ID, status, insurance product ID and name, application date, insured user name, and insurancer ID and name."
+      },
+      {
+        "path": "/insurance/application/detail",
+        "method": "GET",
+        "summary": "Retrieves comprehensive details for a specific insurance application.",
+        "input": {
+          "application_id": "integer"
+        },
+        "input_description": "The unique ID of the application.",
+        "returns": {
+          "application_id": "integer",
+          "status": "string",
+          "application_date": "string",
+          "insured_user_id_card": "string",
+          "insured_user_name": "string",
+          "insured_user_country": "string",
+          "insured_user_age": "integer",
+          "beneficiary_id_card": "string",
+          "beneficiary_name": "string",
+          "health_info": "string",
+          "start_date": "string",
+          "end_date": "string",
+          "reason": "string",
+          "insurance_id": "integer",
+          "insurance_name": "string",
+          "insurance_price": "int",
+          "type": "string",
+          "premium": "int",
+          "coverage_period": "int",
+          "description": "string",
+          "age_limit_min": "int",
+          "age_limit_max": "int"
+        },
+        "return_description": "Detailed information about the insurance application, including its status, dates, insured and beneficiary details, health information, and relevant insurance product details. 'reason' is provided if the application was rejected."
+      },
+      {
+        "path": "/insurance/application/handle",
+        "method": "POST",
+        "summary": "Handles an insurance application, either approving or rejecting it.",
+        "input": {
+          "application_id": "integer",
+          "status": "string"
+        },
+        "input_description": {
+          "application_id": "The unique ID of the application to handle.",
+          "status": "The new status for the application (e.g., 'approved', 'rejected')."
+        },
+        "returns": {
+          "message": "string"
+        },
+        "return_description": "A message indicating the outcome of the application handling (e.g., 'Application approved successfully')."
+      },
+      {
+        "path": "/insurance/application/query",
+        "method": "GET",
+        "summary": "Retrieves a list of insurance applications with their handling statuses.",
+        "returns": {
+          "handle_status_list": [
+            {
+              "application_id": "integer",
+              "status": "string",
+              "insurance_id": "integer",
+              "insurance_name": "string"
+            }
+          ]
+        },
+        "return_description": "A list of insurance applications, showing their ID, handling status (e.g., 'approved', 'rejected'), and associated insurance product ID and name."
+      },
+      {
+        "path": "/insurance/application/query/detail",
+        "method": "GET",
+        "summary": "Retrieves detailed information for a specific insurance application, including both application and insurance status.",
+        "input": {
+          "application_id": "integer"
+        },
+        "input_description": "The unique ID of the application.",
+        "returns": {
+          "application_id": "integer",
+          "status": "string",
+          "application_date": "string",
+          "insured_user_id_card": "string",
+          "insured_user_name": "string",
+          "insured_user_country": "string",
+          "insured_user_age": "integer",
+          "beneficiary_id_card": "string",
+          "beneficiary_name": "string",
+          "health_info": "string",
+          "start_date": "string",
+          "end_date": "string",
+          "reason": "string",
+          "insurance_id": "integer",
+          "insurance_name": "string",
+          "application_status": "string",
+          "insurance_status": "string",
+          "type": "string",
+          "premium": "int",
+          "coverage_period": "int",
+          "description": "string",
+          "age_limit_min": "int",
+          "age_limit_max": "int"
+        },
+        "return_description": "Extensive details about the insurance application, including its status, dates, insured and beneficiary details, health information, and insurance product details. It also provides the overall application status (e.g., 'active', 'expired') and the insurance policy's status."
+      },
+      {
+        "path": "/insurance/create",
+        "method": "POST",
+        "summary": "Creates a new insurance product.",
+        "input": {
+          "name": "string",
+          "type": "string",
+          "premium": "int",
+          "coverage_period": "int",
+          "description": "string",
+          "age_limit_min": "int",
+          "age_limit_max": "int",
+          "price": "int"
+        },
+        "input_description": {
+          "name": "The name of the insurance product.",
+          "type": "The type of insurance (e.g., 'health', 'life').",
+          "premium": "The premium amount for the insurance.",
+          "coverage_period": "The coverage period in days.",
+          "description": "A description of the insurance product.",
+          "age_limit_min": "The minimum age limit for the insurance.",
+          "age_limit_max": "The maximum age limit for the insurance.",
+          "price": "The price of the insurance product."
+        },
+        "returns": {
+          "insurance_id": "integer"
+        },
+        "return_description": "The unique ID of the newly created insurance product."
+      },
+      {
+        "path": "/insurance/update",
+        "method": "POST",
+        "summary": "Updates an existing insurance product.",
+        "input": {
+          "insurance_id": "integer",
+          "name": "string",
+          "type": "string",
+          "premium": "int",
+          "coverage_period": "int",
+          "description": "string",
+          "age_limit_min": "int",
+          "age_limit_max": "int",
+          "price": "int",
+          "status": "string"
+        },
+        "input_description": {
+          "insurance_id": "The unique ID of the insurance product to update.",
+          "name": "The new name of the insurance product.",
+          "type": "The new type of insurance (e.g., 'health', 'life').",
+          "premium": "The new premium amount for the insurance.",
+          "coverage_period": "The new coverage period in days.",
+          "description": "A new description of the insurance product.",
+          "age_limit_min": "The new minimum age limit for the insurance.",
+          "age_limit_max": "The new maximum age limit for the insurance.",
+          "price": "The new price of the insurance product.",
+          "status": "The new status of the insurance product (e.g., 'active', 'inactive')."
+        },
+        "returns": {
+          "message": "string",
+          "insurance_id": "integer"
+        },
+        "return_description": "A message indicating the outcome of the update operation (e.g., 'Insurance product updated successfully') and the ID of the updated insurance product."
+      },
+      {
+        "path": "/insurance/delete",
+        "method": "POST",
+        "summary": "Deletes an existing insurance product.",
+        "input": {
+          "insurance_id": "integer"
+        },
+        "input_description": {
+          "insurance_id": "The unique ID of the insurance product to delete."
+        },
+        "returns": {
+          "message": "string"
+        },
+        "return_description": "A message indicating the outcome of the delete operation (e.g., 'Insurance product deleted successfully')."
+      }
+    ]
+  }
+}
